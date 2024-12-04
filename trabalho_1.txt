@@ -1,0 +1,93 @@
+
+CREATE TABLE Parque (
+    codigo INTEGER PRIMARY KEY,
+    nome TEXT,
+    capacidadeMaxima INTEGER,
+    codigoParqueAdm INTEGER,
+    FOREIGN KEY (codigoParqueAdm) REFERENCES Parque(codigo)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE
+);
+
+CREATE TABLE Cliente (
+    cpf TEXT PRIMARY KEY,
+    nome TEXT,
+    dataNascimento TEXT,  
+    telefone TEXT
+);
+
+CREATE TABLE FoodTruck (
+    codigo INTEGER PRIMARY KEY,
+    nome TEXT,
+    variedade TEXT
+);
+
+CREATE TABLE Gestor (
+    cpf TEXT PRIMARY KEY,
+    nome TEXT NOT NULL,
+    salario REAL NOT NULL,  
+    codigoParque INTEGER NOT NULL,
+    graduacao TEXT NOT NULL,
+    FOREIGN KEY (codigoParque) REFERENCES Parque(codigo)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE
+);
+
+CREATE TABLE Colaborador (
+    cpf TEXT(11) PRIMARY KEY,
+    nome TEXT(100) NOT NULL,
+    salario REAL NOT NULL,
+    codigoParque INTEGER NOT NULL,
+    ramo TEXT NOT NULL,
+    FOREIGN KEY (codigoParque) REFERENCES Parque(codigo)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE
+);
+
+CREATE TABLE Visita (
+    codigoParque INTEGER NOT NULL,
+    cpfCliente TEXT NOT NULL,
+    PRIMARY KEY (codigoParque, cpfCliente),
+    FOREIGN KEY (codigoParque) REFERENCES Parque(codigo)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE,
+    FOREIGN KEY (cpfCliente) REFERENCES Cliente(cpf)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE
+);
+
+CREATE TABLE Ingresso (
+    codigo INTEGER PRIMARY KEY,
+    dia TEXT,  
+    cpf_fk TEXT,
+    FOREIGN KEY (cpf_fk) REFERENCES Cliente(cpf)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE
+);
+
+CREATE TABLE Evento (
+    codigo INTEGER PRIMARY KEY,
+    nome TEXT,
+    codigoParque INTEGER,
+    FOREIGN KEY (codigoParque) REFERENCES Parque(codigo)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE
+);
+
+CREATE TABLE Atracao (
+    nomeArtista TEXT PRIMARY KEY
+);
+
+CREATE TABLE Abriga (
+    nomeArtista TEXT,
+    codigoFoodTruck INTEGER,
+    codigoEvento INTEGER,
+    tema TEXT,
+    PRIMARY KEY (nomeArtista, codigoFoodTruck),
+    FOREIGN KEY (nomeArtista) REFERENCES Atracao(nomeArtista)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE,
+    FOREIGN KEY (codigoFoodTruck) REFERENCES FoodTruck(codigo)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE
+);
